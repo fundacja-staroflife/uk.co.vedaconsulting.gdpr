@@ -235,11 +235,42 @@ function gdpr_civicrm_buildForm($formName, $form) {
       $tc->addField($form);
     }
   }
+  if ($formName == 'CRM_Event_Form_Registration_ThankYou') {
+    $cid = $form->_values['participant']['contact_id'];
+    if (!empty($cid)) {
+      $templatePath = realpath(dirname(__FILE__).'/templates');
+      CRM_Core_Region::instance('page-body')->add(
+        array(
+          'template' => "{$templatePath}/CRM/Gdpr/Event/ThankYou.tpl"
+        )
+      );
+      CRM_Gdpr_CommunicationsPreferences_Utils::addCommsPreferenceLinkInThankYouPage($cid, $form, 'Event');
+    }
+  }
   if ($formName == 'CRM_Contribute_Form_Contribution_Main') {
     CRM_Core_Resources::singleton()->addStyleFile('uk.co.vedaconsulting.gdpr', 'css/gdpr.css');
     $tc = new CRM_Gdpr_SLA_ContributionPage($form->_id);
     if ($tc->isEnabled(TRUE)) {
       $tc->addField($form);
+    }
+  }
+  if ($formName == 'CRM_Contribute_Form_Contribution_ThankYou') {
+    // Contact id for logged in user.
+    $cid = $form->_contactID;
+    if (!$cid) {
+      $trxnId = $form->getVar('_trxnId');
+      if ($trxnId) {
+        $cid = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $trxnId, 'contact_id', 'trxn_id');
+      }
+    }
+    if ($cid) {
+      $templatePath = realpath(dirname(__FILE__) . '/templates');
+      CRM_Core_Region::instance('page-body')->add(
+        array(
+          'template' => "{$templatePath}/CRM/Gdpr/Event/ThankYou.tpl"
+        )
+      );
+      CRM_Gdpr_CommunicationsPreferences_Utils::addCommsPreferenceLinkInThankYouPage($cid, $form, 'ContributionPage');
     }
   }
   if ($formName == 'CRM_Mailing_Form_Subscribe') {
@@ -412,10 +443,8 @@ function gdpr_civicrm_navigationMenu( &$params ) {
 function gdpr_civicrm_tokens( &$tokens ){
   //Keeping this token only to sustain the old tokens otherwise, 
   //the token 'CommunicationPreferences' can be used in all places  
-  $tokens['contact'] = array(
-    'contact.comm_pref_supporter_url' => E::ts("Communication Preferences URL"),
-    'contact.comm_pref_supporter_link' => E::ts("Communication Preferences Link"),
-  );
+  $tokens['contact']['contact.comm_pref_supporter_url'] = E::ts("Communication Preferences URL");
+  $tokens['contact']['contact.comm_pref_supporter_link'] = E::ts("Communication Preferences Link");
   $tokens['CommunicationPreferences'] = array(
     'CommunicationPreferences.comm_pref_supporter_url' => E::ts("Communication Preferences URL (Bulk Mailing)"),
     'CommunicationPreferences.comm_pref_supporter_link' => E::ts("Communication Preferences Link (Bulk Mailing)"),
@@ -473,7 +502,7 @@ function gdpr_civicrm_summaryActions( &$actions, $contactID ) {
   $actions['comm_pref'] = array(
     'title' => 'Communication Preferences Link',
     //need a weight parameter here, Contact BAO looking for weight key and returning notice message. 
-    'weight' => 0, 
+    'weight' => 60, 
     'ref' => 'comm_pref',
     'key' => 'comm_pref',
     'href' => CRM_Gdpr_CommunicationsPreferences_Utils::getCommPreferenceURLForContact($contactID, TRUE),

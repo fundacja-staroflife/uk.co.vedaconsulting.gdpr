@@ -205,7 +205,9 @@ class CRM_Gdpr_CommunicationsPreferences_Utils {
     $result = civicrm_api3('Activity', 'get', array(
       'sequential' => 1,
       'activity_type_id' => "Update_Communication_Preferences",
-      'source_contact_id' => $cid,
+      // 'source_contact_id' => $cid,
+      //MV: Civi Older version doesn't return api value using source_contact_id. if we add target_contact_id then BAO query include activity contact table and filter out using params
+      'target_contact_id' => $cid,      
       'options' => array('sort' => "id desc"),
     ));
     return !empty($result['values']) ? $result['values'][0] : $return;
@@ -290,5 +292,22 @@ class CRM_Gdpr_CommunicationsPreferences_Utils {
       unset($urlParams['cid']);
     }
     return CRM_Utils_System::url('civicrm/gdpr/comms-prefs/update', $urlParams, TRUE, NULL, TRUE, TRUE);
+  }
+
+  public static function addCommsPreferenceLinkInThankYouPage($cid, &$form, $entity = 'Event'){
+    if (empty($cid)) {
+      return;
+    }
+
+    $settings = CRM_Gdpr_CommunicationsPreferences_Utils::getSettings();
+    $settings = $settings[CRM_Gdpr_CommunicationsPreferences_Utils::SETTING_NAME];
+
+    //To display Communication Preference URL in Thank you page for event
+    if (!empty($cid) && !empty($settings['enable_comm_pref_in_thankyou'])) {
+      $commPrefURL = CRM_Gdpr_CommunicationsPreferences_Utils::getCommPreferenceURLForContact($cid);
+      $form->assign('comm_pref_url', $commPrefURL);
+      $form->assign('link_label', $settings['comm_pref_link_label']);
+      $form->assign('entity', $entity);
+    }
   }
 }

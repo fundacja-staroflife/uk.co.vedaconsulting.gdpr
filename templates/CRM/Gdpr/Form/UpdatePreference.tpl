@@ -1,11 +1,22 @@
 {crmScope extensionKey='uk.co.vedaconsulting.gdpr'}
 <div class="crm-communications-preferences-form-block crm-public">
+
+
 	<div class="comm-pref-block channel-block">
 		<!-- Page Intro Text from Settings -->
 		{if $page_intro}
 		<div class="section-description">
 				{ts}{$page_intro}{/ts}
 		</div>
+		{/if}
+
+		{if !empty($form.activity_source)}
+		<fieldset>
+			<div class="crm-section">
+				<div class="label">{$form.activity_source.label}</div>
+				<div class="content">{$form.activity_source.html}</div>
+			</div>
+		</fieldset>
 		{/if}
 
 		<!-- if any profile has configured -->
@@ -97,6 +108,10 @@
       {/if}
     </div>
   </fieldset>
+
+  {if $isCaptcha}
+      {include file='CRM/common/ReCAPTCHA.tpl'}
+  {/if}
 
 	<div class="crm-submit-buttons">
 	{include file="CRM/common/formButtons.tpl" location="bottom"}

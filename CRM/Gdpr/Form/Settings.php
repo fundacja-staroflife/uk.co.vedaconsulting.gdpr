@@ -44,9 +44,19 @@ class CRM_Gdpr_Form_Settings extends CRM_Core_Form {
     // Forget me action
     $this->add('text', 'forgetme_name', E::ts('Forgetme contact name'));
 
+    // Activity types
+    $this->add(
+      'select',
+      'forgetme_activity_type',
+      E::ts('Delete Activities of Types'),
+      array('' => E::ts('- select -')) + $actTypes, // list of options
+      FALSE,
+      array('class' => 'crm-select2 huge', 'multiple' => 'multiple',)
+    );
+
     //Email to Point of Contact/DPO when someone access forget me.
-    $this->add('checkbox', 'email_to_dpo', ts('Email the Point of Contact / DPO?'));
-    $this->add('text', 'email_dpo_subject', ts('Email Subject'));
+    $this->add('checkbox', 'email_to_dpo', E::ts('Email the Point of Contact / DPO?'));
+    $this->add('text', 'email_dpo_subject', E::ts('Email Subject'));
 
     $this->add(
       'text',
@@ -72,10 +82,26 @@ class CRM_Gdpr_Form_Settings extends CRM_Core_Form {
       TRUE,
       array('class' => 'crm-select2')
     );
+    $dataPolicyOptions = array(
+      '1' => ts('File Upload'),
+      '2' => ts('Web page link'),
+    );
+    $this->addRadio('sla_data_policy_option',
+      ts('Data Policy options'),
+      $dataPolicyOptions,
+      array(),
+      '&nbsp;', FALSE
+    );
     $this->add(
       'file',
       'sla_tc_upload',
       E::ts('Data Policy file')
+    );
+    $this->add(
+      'text',
+      'sla_tc_link',
+      E::ts('Data Policy link'),
+      array('class' => 'huge')
     );
     $this->add(
       'checkbox',
@@ -110,46 +136,58 @@ class CRM_Gdpr_Form_Settings extends CRM_Core_Form {
     $this->add(
       'advcheckbox',
       'event_tc_enable',
-      ts('Enable Terms and Conditions for every event')
+      E::ts('Enable Terms and Conditions for every event')
     );
     $this->add(
       'advcheckbox',
       'cp_tc_enable',
-      ts('Enable Terms and Conditions for every Contribution Page')
+      E::ts('Enable Terms and Conditions for every Contribution Page')
     );
     //If T+C is enabled for both Events Contribution Pages they will share the
     //following settings.
     $this->add(
       'select',
       'entity_tc_position',
-      ts('Checkbox Position'),
+      E::ts('Checkbox Position'),
       array(
-        'customPre' => ts('Top profile'),
-        'customPost' => ts('Bottom profile'),
-        'formTop' => ts('Top of form'),
-        'formBottom' => ts('Bottom of form')
+        'customPre' => E::ts('Top profile'),
+        'customPost' => E::ts('Bottom profile'),
+        'formTop' => E::ts('Top of form'),
+        'formBottom' => E::ts('Bottom of form')
       )
     );
     $this->add(
       'text',
       'entity_tc_link_label',
-      ts('Link Label')
+      E::ts('Link Label')
     );
     $this->add(
       'text',
       'entity_tc_checkbox_text',
-      ts('Checkbox text')
+      E::ts('Checkbox text')
     );
     $this->add(
       'textarea',
       'entity_tc_intro',
-      ts('Introduction'),
+      E::ts('Introduction'),
       array('cols' => 50)
+    );
+    $this->addRadio('entity_tc_option',
+      ts('Terms and Conditions options'),
+      $dataPolicyOptions,
+      array(),
+      '&nbsp;', FALSE
     );
     $this->add(
       'file',
       'entity_tc_upload',
-      ts('Default Terms and Conditions')
+      ts('Default Terms and Conditions file')
+    );
+    $this->add(
+      'text',
+      'entity_tc_link',
+      E::ts('Default Terms and Conditions link'),
+      array('class' => 'huge')
     );
     $this->add(
       'hidden',
@@ -176,9 +214,9 @@ class CRM_Gdpr_Form_Settings extends CRM_Core_Form {
       'sla_link_label' => E::ts('Data Policy'),
       'sla_checkbox_text' => E::ts('I accept the Data Policy.'),
       'sla_tc_new_version' => FALSE,
-      'entity_tc_link_label' => ts('Terms &amp; Conditions'),
-      'entity_tc_checkbox_text' => ts('I accept the Terms &amp; Conditions for this event.'),
-      'entity_tc_intro' => ts('Please read and accept the Terms &amp; Conditions and Data Policy.'),
+      'entity_tc_link_label' => E::ts('Terms &amp; Conditions'),
+      'entity_tc_checkbox_text' => E::ts('I accept the Terms &amp; Conditions for this event.'),
+      'entity_tc_intro' => E::ts('Please read and accept the Terms &amp; Conditions and Data Policy.'),
     );
 
     // Get GDPR settings, for setting defaults
@@ -189,9 +227,21 @@ class CRM_Gdpr_Form_Settings extends CRM_Core_Form {
       $this->setDefaults($defaults);
     }
     // Pass on variables to link to terms and conditions.
-    if (!empty($defaults['sla_tc'])) {
-      $sla_tc['url'] = $defaults['sla_tc'];
-      $sla_tc['name'] = basename($defaults['sla_tc']);
+    if (!empty($defaults['sla_tc']) || !empty($defaults['sla_tc_link'])) {
+      switch ($defaults['sla_data_policy_option']) {
+        // File uploaded
+        case 1:
+        default:
+          $sla_tc['url'] = $defaults['sla_tc'];
+          $sla_tc['name'] = basename($defaults['sla_tc']);
+          break;
+
+        // Web page link
+        case 2:
+          $sla_tc['url'] = $defaults['sla_tc_link'];
+          break;
+      }
+      $this->assign('sla_data_policy_option', $defaults['sla_data_policy_option']);
       $this->assign('sla_tc_current', $sla_tc);
       $version = !empty($defaults['sla_tc_version']) ? $defaults['sla_tc_version'] : 1;
       $this->assign('sla_tc_version', $version);
@@ -200,9 +250,21 @@ class CRM_Gdpr_Form_Settings extends CRM_Core_Form {
         $this->assign('sla_tc_updated', $updated);
       }
     }
-    if (!empty($defaults['entity_tc'])) {
-      $entity_tc['url'] = $defaults['entity_tc'];
-      $entity_tc['name'] = basename($defaults['entity_tc']);
+    if (!empty($defaults['entity_tc'])  || !empty($defaults['entity_tc_link'])) {
+      switch ($defaults['entity_tc_option']) {
+        // File uploaded
+        case 1:
+        default:
+          $entity_tc['url'] = $defaults['entity_tc'];
+          $entity_tc['name'] = basename($defaults['entity_tc']);
+          break;
+
+        // Web page link
+        case 2:
+          $entity_tc['url'] = $defaults['entity_tc_link'];
+          break;
+      }
+      $this->assign('entity_tc_option', $defaults['entity_tc_option']);
       $this->assign('entity_tc_current', $entity_tc);
     }
     parent::buildQuickForm();
@@ -217,9 +279,15 @@ class CRM_Gdpr_Form_Settings extends CRM_Core_Form {
     $settings['activity_period'] = $values['activity_period'];
     $settings['contact_type'] = $values['contact_type'];
     $settings['forgetme_name'] = $values['forgetme_name'];
+    $settings['forgetme_activity_type'] = $values['forgetme_activity_type'];
     $settings['email_to_dpo'] = isset($values['email_to_dpo']) ? $values['email_to_dpo'] : 0;
     $settings['email_dpo_subject'] = $values['email_dpo_subject'];
     $settings['sla_period'] = $values['sla_period'];
+    $settings['sla_data_policy_option'] = $values['sla_data_policy_option'];
+    // Privacy policy link
+    if ($values['sla_data_policy_option'] == 2) {
+      $settings['sla_tc_link'] = $values['sla_tc_link'];
+    }
     $settings['sla_prompt'] = !empty($values['sla_prompt']) ? 1 : 0;
     $settings['sla_agreement_text'] = $values['sla_agreement_text'];
     $settings['sla_link_label'] = $values['sla_link_label'];
@@ -231,6 +299,11 @@ class CRM_Gdpr_Form_Settings extends CRM_Core_Form {
     $settings['entity_tc_link_label'] = $values['entity_tc_link_label'];
     $settings['entity_tc_checkbox_text'] = $values['entity_tc_checkbox_text'];
     $settings['entity_tc_intro'] = $values['entity_tc_intro'];
+    $settings['entity_tc_option'] = $values['entity_tc_option'];
+    // Terms and conditions link
+    if ($values['entity_tc_option'] == 2) {
+      $settings['entity_tc_link'] = $values['entity_tc_link'];
+    }
     // Map the upload file element to setting name.
     $upload_elems = array(
       'sla_tc_upload' => 'sla_tc',

@@ -12,7 +12,7 @@
     <div class="crm-section">
       <div class="label">{$form.$elementName.label}</div>
       <div class="content">{$form.$elementName.html}
-      {if $descriptions.$elementName} 
+      {if $descriptions.$elementName}
         <div class="description">{$descriptions.$elementName}</div>
       {/if}
       </div>
@@ -28,7 +28,7 @@
   <div class="crm-block crm-form-block crm-gdpr-comms-prefs-form-block">
     <div class="crm-section">
       <div class="label">{ $form.enable_channels.label }</div>
-      <div class="content">{$form.enable_channels.html} 
+      <div class="content">{$form.enable_channels.html}
       </div>
       <div class="clear"></div>
     </div>
@@ -125,6 +125,30 @@
   </div> {* end Completion block *}
  </div>{* end form *}
 
+  <!-- MV: Settings for Communications Preference Link in event and contribution thank you page -->
+  <h3> {ts}Event & Contribution thank you page{/ts} </h3>
+  <div class="crm-block crm-form-block crm-gdpr-comms-prefs-form-block">
+    <div class="help">{ts}To display communication preference link in Event and Contribution thank you pages{/ts}</div>
+    <div class="crm-section">
+      <div class="label">{$form.enable_comm_pref_in_thankyou.label}</div>
+      <div class="content">{$form.enable_comm_pref_in_thankyou.html}
+        <div class="description"> </div>
+      </div>
+    </div>
+    <div class="clear"></div>
+    <div class="crm-section">
+      <div class="label">{$form.comm_pref_link_label.label}</div>
+      <div class="content">{$form.comm_pref_link_label.html}</div>
+    </div>
+    <div class="clear"></div>
+    <div class="crm-section">
+      <div class="label">{$form.comm_pref_link_intro.label}</div>
+      <div class="content">{$form.comm_pref_link_intro.html}</div>
+    </div>
+    <div class="clear"></div>
+  </div> {* end Completion block *}
+ </div>{* end form *}
+
 {* FOOTER *}
 <div class="crm-submit-buttons">
 {include file="CRM/common/formButtons.tpl" location="bottom"}
@@ -145,7 +169,7 @@
     completionRadio = $(completionRadioSelector),
     completionUrl = $('.completion-url');
     completionMessage = $('.completion-message'),
-    isOn = $(completionRadioSelector + ":checked").val() == 1; 
+    isOn = $(completionRadioSelector + ":checked").val() == 1;
   completionUrl.toggle(isOn);
   completionMessage.toggle(!isOn);
   completionRadio.on('change', function(){
@@ -173,7 +197,7 @@
             $(this).attr('disabled', !isChecked);
           });
     }
-    channelChk.each(function() { 
+    channelChk.each(function() {
       checkGroupChannels(this)
     });
     channelChk.on('change', function() {

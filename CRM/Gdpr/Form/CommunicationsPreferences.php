@@ -47,12 +47,22 @@ class CRM_Gdpr_Form_CommunicationsPreferences extends CRM_Core_Form {
       false
     );
     $descriptions['use_as_mailing_subscribe'] = E::ts('Check to use the Communications Preferences page instead of the default Mailing Subscribe page.');
+    $this->add(
+      'advcheckbox',
+      'add_captcha',
+      E::ts('Include reCAPTCHA?'),
+      '',
+      false
+    );
+    $recaptchaSettingsUrl = CRM_Utils_System::url('civicrm/admin/setting/misc', 'reset=1');
+    $descriptions['add_captcha'] = E::ts('Check to use reCAPTCHA in Communications Preferences page. Make sure you have configured the <a href="'.$recaptchaSettingsUrl.'">reCAPTCHA keys</a>.');
     // Let the template know about elements in this section.
     $page_elements = array(
       'page_title',
       'page_intro',
       'profile',
-      'use_as_mailing_subscribe'
+      'use_as_mailing_subscribe',
+      'add_captcha'
     );
     $this->assign('page_elements', $page_elements);
     // Comms prefs channels
@@ -158,7 +168,7 @@ class CRM_Gdpr_Form_CommunicationsPreferences extends CRM_Core_Form {
         'group_description',
         'Description',
         array(
-          'cols' => 30, 
+          'cols' => 30,
           'rows' => 6
           )
       );
@@ -200,12 +210,30 @@ class CRM_Gdpr_Form_CommunicationsPreferences extends CRM_Core_Form {
     $this->assign('descriptions', $descriptions);
     $this->assign('groups_elements', $groups_elements);
     $this->assign('group_containers', $group_containers);
-    // Use the current logged in user for the preview. 
+    // Use the current logged in user for the preview.
     $current_cid = CRM_Core_Session::singleton()->getLoggedInContactID();
     if ($current_cid) {
       $url = CRM_Gdpr_CommunicationsPreferences_Utils::getCommPreferenceURLForContact($current_cid);
       $this->assign('communications_preferences_page_url', $url);
     }
+
+    //MV: Communication preference Link in Event and Contribution Thankyou page
+    $this->add(
+      'advcheckbox',
+      'enable_comm_pref_in_thankyou',
+      E::ts('Add link to the thank you page')
+    );
+    $this->add(
+      'text',
+      'comm_pref_link_label',
+      E::ts('Link label')
+    );
+    $this->add(
+      'textarea',
+      'comm_pref_link_intro',
+      E::ts('Text above the link'),
+      $text_area_attributes
+    );
 
     $this->addButtons(array(
       array(
