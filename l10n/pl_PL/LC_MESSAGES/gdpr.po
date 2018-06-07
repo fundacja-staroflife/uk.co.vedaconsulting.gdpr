@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gdpr\n"
-"POT-Creation-Date: \n"
+"POT-Creation-Date: 2018-06-03 02:48+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marcin Lewandowski <lewandowski.marcin@staroflife.pl>\n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 
 #: CRM/Gdpr/CommunicationsPreferences/Utils.php
-#: CRM/Gdpr/Form/UpdatePreference.php
+#: CRM/Gdpr/Form/UpdatePreference.php gdpr.php
 msgid "Communication Preferences"
 msgstr "Preferencje komunikacji"
 
@@ -177,6 +177,18 @@ msgstr "Komunikat po ukończeniu"
 msgid "A message to display to the user after the form is submitted. "
 msgstr ""
 "Wiadomość do wyświetlenia po wypełnieniu formularza przez użytkownika. "
+
+#: CRM/Gdpr/Form/CommunicationsPreferences.php
+msgid "Add link to the thank you page"
+msgstr "Dodaj link do strony podziękowania"
+
+#: CRM/Gdpr/Form/CommunicationsPreferences.php
+msgid "Link label"
+msgstr "Etykieta linku"
+
+#: CRM/Gdpr/Form/CommunicationsPreferences.php
+msgid "Text above the link"
+msgstr "Tekst ponad linkiem"
 
 #: CRM/Gdpr/Form/CommunicationsPreferences.php CRM/Gdpr/Form/Settings.php
 #: CRM/Gdpr/Form/UpdatePreference.php
@@ -402,7 +414,7 @@ msgstr "Polityka ochrony prywatności"
 msgid "I accept the Data Policy."
 msgstr "Akceptuję Politykę Ochrony Prywatności."
 
-#: CRM/Gdpr/Form/Settings.php
+#: CRM/Gdpr/Form/Settings.php gdpr.php
 msgid "Terms &amp; Conditions"
 msgstr "Warunki"
 
@@ -421,10 +433,19 @@ msgstr "- wybierz -"
 
 # do weryfikacji na produkcji.
 #: CRM/Gdpr/Form/UpdatePreference.php
-#, fuzzy
-#| msgid "I have read and agree to the <a href='%1' target='_blank'>%2</a>"
 msgid "<a href='%1' target='_blank'>%2</a>"
-msgstr "Zapoznałem/am się i akceptuję<a href='%1' target='_blank'>%2</a>"
+msgstr "<a href='%1' target='_blank'>%2</a>"
+
+# do weryfikacji na produkcji.
+#: CRM/Gdpr/Form/UpdatePreference.php
+msgid ""
+"Here is our <a href='%1' target='_blank'>%2</a>, which you agreed to on %3."
+msgstr ""
+"Tutaj jest<a href='%1' target='_blank'>%2</a>, którą zaakceptowałeś/aś %3."
+
+#: CRM/Gdpr/Form/UpdatePreference.php
+msgid "Source of Communication Preferences"
+msgstr "Źródło preferencji komunikacyjnych"
 
 #: CRM/Gdpr/Form/UpdatePreference.php
 msgid "Communication Preferences updated"
@@ -449,6 +470,54 @@ msgstr "Jeszcze nie zaktualizowane przez ten kontakt."
 #: CRM/Gdpr/Upgrader/Base.php
 msgid "Upgrade %1 to revision %2"
 msgstr "Zaktualizuj %1 do wersji %2"
+
+#: gdpr.php
+msgid "Contribution Page"
+msgstr "Strona transakcyjna"
+
+#: gdpr.php
+msgid "GDPR"
+msgstr "GDPR"
+
+#: gdpr.php
+msgid "Communication Preferences URL"
+msgstr "URL preferencji komunikacji"
+
+#: gdpr.php
+msgid "Communication Preferences Link"
+msgstr "Link do preferencji komunikacji"
+
+#: gdpr.php
+msgid "Communication Preferences URL (Bulk Mailing)"
+msgstr "URL do preferencji komunikacji (mailing)"
+
+#: gdpr.php
+msgid "Communication Preferences Link (Bulk Mailing)"
+msgstr "Link do preferencji komunikacji (mailing)"
+
+#: gdpr.php
+msgid "access GDPR"
+msgstr "dostęp GDPR"
+
+#: gdpr.php
+msgid "View GDPR related information"
+msgstr "Pokaż informacje GDPR"
+
+#: gdpr.php
+msgid "forget contact"
+msgstr "zapomnij kontakt"
+
+#: gdpr.php
+msgid "Anonymize contacts"
+msgstr "Zanonimizuj kontakty"
+
+#: gdpr.php
+msgid "administer GDPR"
+msgstr "zarządzaj GDPR"
+
+#: gdpr.php
+msgid "Manage GDPR settings"
+msgstr "Zarządzaj ustawieniami GDPR"
 
 #: templates/CRM/Gdpr/Form/Activitycontact.tpl
 msgid "Complete OR partial contact name."
@@ -516,6 +585,14 @@ msgid "Last"
 msgstr "Ostatnia"
 
 #: templates/CRM/Gdpr/Form/CommunicationsPreferences.tpl
+msgid ""
+"Configure the display of the <a href=\"/civicrm/gdpr/comms-prefs/update\" "
+"target=\"blank\">Communications Preferences page</a>."
+msgstr ""
+"Skonfiguruj wyświetlanie <a href=\"/civicrm/gdpr/comms-prefs/update\" target="
+"\"blank\"> strony Preferencje Komunikacji </a>."
+
+#: templates/CRM/Gdpr/Form/CommunicationsPreferences.tpl
 msgid "Channels"
 msgstr "Kanały"
 
@@ -561,6 +638,18 @@ msgstr "Kanał"
 #: templates/CRM/Gdpr/Form/CommunicationsPreferences.tpl
 msgid "Completion"
 msgstr "Ukończone"
+
+#: templates/CRM/Gdpr/Form/CommunicationsPreferences.tpl
+msgid "Event & Contribution thank you page"
+msgstr "Wydarzenie i Strona Transakcyjna - strona podziękowania"
+
+#: templates/CRM/Gdpr/Form/CommunicationsPreferences.tpl
+msgid ""
+"To display communication preference link in Event and Contribution thank you "
+"pages"
+msgstr ""
+"Aby wyświetlić link preferencji komunikacji na stronach podziękowań i "
+"podziękowań za udział w wydarzeniu"
 
 #: templates/CRM/Gdpr/Form/Forgetme.tpl
 msgid ""
@@ -715,6 +804,22 @@ msgstr ""
 "Ustaw wartości domyślne dla Warunków. Możesz je zastąpić w ustawieniach "
 "poszczególnych wydarzeń i stron transakcyjnych."
 
+#: templates/CRM/Gdpr/Form/Settings.tpl
+msgid ""
+"A default terms and conditions file for use in Event registrations etc. This "
+"can be overridden on the settings for the particular event."
+msgstr ""
+"Domyślny plik Warunków wykorzystywany w rejestracji do wydarzeń itp. Ten "
+"plik może zostać nadpisany w ustawieniach poszczególnych wydarzeń."
+
+#: templates/CRM/Gdpr/Form/Settings.tpl
+msgid "(days)"
+msgstr "(dni)"
+
+#: templates/CRM/Gdpr/Form/Settings.tpl
+msgid "More info"
+msgstr "Więcej info"
+
 #: templates/CRM/Gdpr/Page/ContactSummary.tpl
 msgid "GDPR Status"
 msgstr "Status RODO"
@@ -784,22 +889,6 @@ msgstr "Kontakt nie został zapisany do żadnej z grup subskrypcji."
 
 #~ msgid "Unknown"
 #~ msgstr "Nieznany"
-
-#~ msgid "GDPR"
-#~ msgstr "GDPR"
-
-#~ msgid "Communication Preferences URL"
-#~ msgstr "URL preferencji komunikacji"
-
-#~ msgid "Communication Preferences Link"
-#~ msgstr "Link do preferencji komunikacji"
-
-#~ msgid ""
-#~ "Configure the display of the <a href=\"/civicrm/gdpr/comms-prefs/update\" "
-#~ "target=\"blank\">Communications Preferences page</a>."
-#~ msgstr ""
-#~ "Skonfiguruj wyświetlanie <a href=\"/civicrm/gdpr/comms-prefs/update\" "
-#~ "target=\"blank\"> strony Preferencje Komunikacji </a>."
 
 #~ msgid "Set your organisation's point of contact."
 #~ msgstr "Ustaw Punkt Kontaktowy w Twojej organizacji."
